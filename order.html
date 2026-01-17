@@ -1,199 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Commander | E.S Company</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    margin: 0;
-    padding: 0;
-  }
-
-  /* NAVBAR SIMPLE */
-  .header {
-    background: #1e40af;
-    padding: 15px;
-    color: white;
-    text-align: center;
-  }
-
-  .header h1 {
-    margin: 0;
-  }
-
-  /* CONTAINER */
-  .container {
-    max-width: 800px;
-    margin: 30px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
-
-  /* AVIS IMPORTANT */
-  .avis {
-    background: #fffbcc;
-    border: 1px solid #ffe58a;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-
-  /* FORM */
-  input, textarea {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-  }
-
-  button {
-    width: 100%;
-    padding: 12px;
-    background: #1e40af;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-
-  button:hover {
-    opacity: 0.9;
-  }
-
-  /* FOOTER */
-  footer {
-    background: #111827;
-    color: white;
-    padding: 20px;
-    text-align: center;
-    margin-top: 30px;
-  }
-
-  footer a {
-    color: #60a5fa;
-    text-decoration: none;
-    margin: 0 10px;
-  }
-
-  /* MODAL */
-  .modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal-content {
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-  }
-
-  .modal-content button {
-    background: #22c55e;
-    margin-top: 15px;
-  }
-
-</style>
+  <meta charset="UTF-8">
+  <title>Commander | E.S Company</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="header">
-  <h1>Commande E.S Company</h1>
-</div>
+  <header>
+    <h1>E.S Company</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="services.html">Services</a>
+      <a href="order.html">Commander</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
 
-<div class="container">
-  <!-- AVIS IMPORTANT -->
-  <div class="avis">
-    <strong>Avis important :</strong>
-    <p>Après votre commande, nous allons vous contacter pour finaliser le paiement. Assurez-vous d’entrer un numéro valide.</p>
-  </div>
+  <section class="hero">
+    <h2>Commander un service</h2>
+    <p>
+      Après ta commande, nous allons te contacter pour le paiement.  
+      Assure-toi d’entrer un numéro valide (WhatsApp) pour qu’on puisse te joindre.
+    </p>
+  </section>
 
-  <!-- FORM -->
-  <form id="orderForm">
-    <label>Nom</label>
-    <input type="text" id="name" required placeholder="Votre nom">
+  <section>
+    <form id="orderForm">
+      <input type="text" name="name" placeholder="Nom complet" required>
+      <input type="text" name="phone" id="phone" placeholder="Téléphone (WhatsApp) - valide" required>
+      <input type="email" name="email" placeholder="Email (optionnel)">
+      <input type="text" name="service" id="serviceInput" placeholder="Service" required>
+      <textarea name="details" placeholder="Détails (optionnel)" rows="4"></textarea>
+      <button type="submit">Envoyer la commande</button>
+    </form>
 
-    <label>Téléphone</label>
-    <input type="text" id="phone" required placeholder="Ex: 509XXXXXXXX">
+    <p id="message"></p>
+  </section>
 
-    <label>Produit</label>
-    <input type="text" id="productName" required placeholder="Nom du produit">
+  <footer>
+    <p>Site coded by True-Manno</p>
+    <div class="footer-links">
+      <a href="index.html">Accueil</a>
+      <a href="services.html">Services</a>
+      <a href="order.html">Commander</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://wa.me/50943895284" target="_blank">WhatsApp</a>
+    </div>
+    <p>© 2026 E.S Company. Tous droits réservés.</p>
+  </footer>
 
-    <label>Prix</label>
-    <input type="text" id="price" required placeholder="Prix en GDS">
+  <script>
+    const API_URL = "https://e-s-service-backend.onrender.com";
 
-    <button type="submit">Envoyer la commande</button>
-  </form>
-</div>
+    const params = new URLSearchParams(window.location.search);
+    const serviceFromURL = params.get("service");
 
-<!-- MODAL -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <h3>Merci pour votre commande ! 🎉</h3>
-    <p>Nous allons vous contacter très bientôt pour finaliser le paiement.</p>
-    <button onclick="closeModal()">OK</button>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <p>Site coding by True-Manno</p>
-  <a href="/services.html">Services</a>
-  <a href="/order.html">Commander</a>
-  <a href="/contact.html">Contact</a>
-</footer>
-
-<script>
-  const form = document.getElementById("orderForm");
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault(); // empêche le rechargement
-
-    const data = {
-      customerName: document.getElementById("name").value,
-      phone: document.getElementById("phone").value,
-      productName: document.getElementById("productName").value,
-      price: document.getElementById("price").value
-    };
-
-    // Validation du numéro
-    if (data.phone.length < 10) {
-      alert("Veuillez entrer un numéro valide.");
-      return;
+    if (serviceFromURL) {
+      document.getElementById("serviceInput").value = serviceFromURL;
     }
 
-    // ENVOI DE LA COMMANDE
-    await fetch("https://e-s-service-backend.onrender.com/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
+    function isValidPhone(phone) {
+      // Validation simple (Haïti +509 ou autre)
+      const regex = /^[0-9]{8,15}$/;
+      return regex.test(phone);
+    }
 
-    // AFFICHER LA BOITE DE DIALOGUE
-    document.getElementById("modal").style.display = "flex";
+    document.getElementById("orderForm").onsubmit = async (e) => {
+      e.preventDefault();
 
-    // RESET FORM
-    form.reset();
-  });
+      const phone = document.getElementById("phone").value.trim();
+      if (!isValidPhone(phone)) {
+        document.getElementById("message").innerText = "📌 Entre un numéro valide (ex: 509XXXXXXXX).";
+        return;
+      }
 
-  function closeModal() {
-    document.getElementById("modal").style.display = "none";
-  }
-</script>
+      const formData = Object.fromEntries(new FormData(e.target));
+
+      const response = await fetch(`${API_URL}/order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        document.getElementById("message").innerText =
+          "✅ Commande envoyée ! Nous allons te contacter bientôt pour le paiement.";
+        e.target.reset();
+      } else {
+        document.getElementById("message").innerText =
+          "❌ Une erreur est survenue. Réessaie.";
+      }
+    };
+  </script>
 
 </body>
 </html>
