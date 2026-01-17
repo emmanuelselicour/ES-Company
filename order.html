@@ -4,13 +4,10 @@
   <meta charset="UTF-8">
   <title>Commander | E.S Company</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- HEADER -->
   <header>
     <h1>E.S Company</h1>
     <nav>
@@ -21,38 +18,42 @@
     </nav>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <h2>Commander un service</h2>
-    <p>Remplis le formulaire et on te répond rapidement.</p>
+    <p>
+      Après ta commande, nous allons te contacter pour le paiement.  
+      Assure-toi d’entrer un numéro valide (WhatsApp) pour qu’on puisse te joindre.
+    </p>
   </section>
 
-  <!-- ORDER FORM -->
   <section>
     <form id="orderForm">
       <input type="text" name="name" placeholder="Nom complet" required>
-      <input type="text" name="phone" placeholder="Téléphone (WhatsApp)" required>
+      <input type="text" name="phone" id="phone" placeholder="Téléphone (WhatsApp) - valide" required>
       <input type="email" name="email" placeholder="Email (optionnel)">
-
       <input type="text" name="service" id="serviceInput" placeholder="Service" required>
       <textarea name="details" placeholder="Détails (optionnel)" rows="4"></textarea>
-
       <button type="submit">Envoyer la commande</button>
     </form>
 
     <p id="message"></p>
   </section>
 
-  <!-- FOOTER -->
   <footer>
     <p>Site coded by True-Manno</p>
+    <div class="footer-links">
+      <a href="index.html">Accueil</a>
+      <a href="services.html">Services</a>
+      <a href="order.html">Commander</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://wa.me/50943895284" target="_blank">WhatsApp</a>
+    </div>
+    <p>© 2026 E.S Company. Tous droits réservés.</p>
   </footer>
 
-  <!-- JS -->
   <script>
-    const API_URL = "https://TON-API-RENDER.onrender.com";
+    const API_URL = "https://e-s-service-backend.onrender.com";
 
-    // Get service from URL
     const params = new URLSearchParams(window.location.search);
     const serviceFromURL = params.get("service");
 
@@ -60,8 +61,20 @@
       document.getElementById("serviceInput").value = serviceFromURL;
     }
 
+    function isValidPhone(phone) {
+      // Validation simple (Haïti +509 ou autre)
+      const regex = /^[0-9]{8,15}$/;
+      return regex.test(phone);
+    }
+
     document.getElementById("orderForm").onsubmit = async (e) => {
       e.preventDefault();
+
+      const phone = document.getElementById("phone").value.trim();
+      if (!isValidPhone(phone)) {
+        document.getElementById("message").innerText = "📌 Entre un numéro valide (ex: 509XXXXXXXX).";
+        return;
+      }
 
       const formData = Object.fromEntries(new FormData(e.target));
 
@@ -74,10 +87,12 @@
       const result = await response.json();
 
       if (result.success) {
-        document.getElementById("message").innerText = "✅ Commande envoyée ! Nous allons te contacter.";
+        document.getElementById("message").innerText =
+          "✅ Commande envoyée ! Nous allons te contacter bientôt pour le paiement.";
         e.target.reset();
       } else {
-        document.getElementById("message").innerText = "❌ Une erreur est survenue. Réessaie.";
+        document.getElementById("message").innerText =
+          "❌ Une erreur est survenue. Réessaie.";
       }
     };
   </script>
