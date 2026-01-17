@@ -4,81 +4,57 @@
   <meta charset="UTF-8">
   <title>Nos Services | E.S Company</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
+<header>
+  <h1>E.S Company</h1>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="services.html">Services</a>
+    <a href="order.html">Commander</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
 
-  <!-- HEADER -->
-  <header>
-    <h1>E.S Company</h1>
-    <nav>
-      <a href="index.html">Accueil</a>
-      <a href="services.html">Services</a>
-      <a href="order.html">Commander</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
+<section class="hero">
+  <h2>Nos services digitaux</h2>
+  <p>Rapides, fiables et accessibles partout.</p>
+</section>
 
-  <!-- HERO -->
-  <section class="hero">
-    <h2>Nos services digitaux</h2>
-    <p>Rapides, fiables et accessibles partout.</p>
-  </section>
+<section>
+  <div id="services"></div>
+</section>
 
-  <!-- SERVICES LIST -->
-  <section>
-    <div id="services">
-      <p>Chargement des services...</p>
-    </div>
-  </section>
+<footer>
+  <p>Site coded by True-Manno</p>
+</footer>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>Site coded by True-Manno</p>
-  </footer>
+<script>
+  const API_URL = "https://e-s-service-backend.onrender.com";
 
-  <!-- JS -->
-  <script>
-    const API_URL = "https://TON-API-RENDER.onrender.com";
+  fetch(`${API_URL}/products`)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("services");
+      container.innerHTML = "";
 
-    fetch(`${API_URL}/services`)
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById("services");
-        container.innerHTML = "";
-
-        data.forEach(service => {
-          container.innerHTML += `
-            <div class="card">
-              <h3>${service.name}</h3>
-              <p>${service.price} GDS</p>
-              <a href="order.html?service=${encodeURIComponent(service.name)}">
-                <button style="
-                  margin-top:10px;
-                  padding:10px;
-                  width:100%;
-                  border:none;
-                  border-radius:6px;
-                  background:#1e40af;
-                  color:#fff;
-                  cursor:pointer;
-                ">
-                  Commander
-                </button>
-              </a>
-            </div>
-          `;
-        });
-      })
-      .catch(err => {
-        document.getElementById("services").innerHTML =
-          "<p>Impossible de charger les services.</p>";
-        console.error(err);
+      data.forEach(product => {
+        container.innerHTML += `
+          <div class="card">
+            <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius:10px; margin-bottom:10px;">
+            <h3>${product.name}</h3>
+            <p>${product.price} GDS</p>
+            <p>${product.description}</p>
+            <a href="order.html?service=${encodeURIComponent(product.name)}">
+              <button style="margin-top:10px; padding:10px; width:100%; border:none; border-radius:6px; background:#1e40af; color:#fff; cursor:pointer;">
+                Commander
+              </button>
+            </a>
+          </div>
+        `;
       });
-  </script>
-
+    });
+</script>
 </body>
 </html>
