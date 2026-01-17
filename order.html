@@ -1,18 +1,86 @@
-<form id="orderForm">
-  <input name="name" placeholder="Nom" required>
-  <input name="service" placeholder="Service choisi" required>
-  <button>Envoyer</button>
-</form>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Commander | E.S Company</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script>
-document.getElementById("orderForm").onsubmit = async e => {
-  e.preventDefault();
-  const form = Object.fromEntries(new FormData(e.target));
-  await fetch("https://TON_API_RENDER_URL/order", {
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(form)
-  });
-  alert("Commande envoyée");
-};
-</script>
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <h1>E.S Company</h1>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="services.html">Services</a>
+      <a href="order.html">Commander</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h2>Commander un service</h2>
+    <p>Remplis le formulaire et on te répond rapidement.</p>
+  </section>
+
+  <!-- ORDER FORM -->
+  <section>
+    <form id="orderForm">
+      <input type="text" name="name" placeholder="Nom complet" required>
+      <input type="text" name="phone" placeholder="Téléphone (WhatsApp)" required>
+      <input type="email" name="email" placeholder="Email (optionnel)">
+
+      <input type="text" name="service" id="serviceInput" placeholder="Service" required>
+      <textarea name="details" placeholder="Détails (optionnel)" rows="4"></textarea>
+
+      <button type="submit">Envoyer la commande</button>
+    </form>
+
+    <p id="message"></p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Site coded by True-Manno</p>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    const API_URL = "https://TON-API-RENDER.onrender.com";
+
+    // Get service from URL
+    const params = new URLSearchParams(window.location.search);
+    const serviceFromURL = params.get("service");
+
+    if (serviceFromURL) {
+      document.getElementById("serviceInput").value = serviceFromURL;
+    }
+
+    document.getElementById("orderForm").onsubmit = async (e) => {
+      e.preventDefault();
+
+      const formData = Object.fromEntries(new FormData(e.target));
+
+      const response = await fetch(`${API_URL}/order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        document.getElementById("message").innerText = "✅ Commande envoyée ! Nous allons te contacter.";
+        e.target.reset();
+      } else {
+        document.getElementById("message").innerText = "❌ Une erreur est survenue. Réessaie.";
+      }
+    };
+  </script>
+
+</body>
+</html>
