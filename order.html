@@ -1,101 +1,90 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Commander | E.S Company</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commander</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f5f5f5; }
+  .container { max-width: 600px; margin: auto; padding: 20px; background: #fff; border-radius: 10px; }
+  input, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ddd; }
+  button { width: 100%; padding: 12px; background: #1e40af; color: #fff; border: none; border-radius: 8px; cursor: pointer; }
+  .dialog {
+    display: none;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  }
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>E.S Company</h1>
-    <nav>
-      <a href="index.html">Accueil</a>
-      <a href="services.html">Services</a>
-      <a href="order.html">Commander</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
+<div class="container">
+  <h2>Commander</h2>
 
-  <section class="hero">
-    <h2>Commander un service</h2>
-    <p>
-      Après ta commande, nous allons te contacter pour le paiement.  
-      Assure-toi d’entrer un numéro valide (WhatsApp) pour qu’on puisse te joindre.
-    </p>
-  </section>
+  <label>Nom complet</label>
+  <input type="text" id="name" placeholder="Entrez votre nom">
 
-  <section>
-    <form id="orderForm">
-      <input type="text" name="name" placeholder="Nom complet" required>
-      <input type="text" name="phone" id="phone" placeholder="Téléphone (WhatsApp) - valide" required>
-      <input type="email" name="email" placeholder="Email (optionnel)">
-      <input type="text" name="service" id="serviceInput" placeholder="Service" required>
-      <textarea name="details" placeholder="Détails (optionnel)" rows="4"></textarea>
-      <button type="submit">Envoyer la commande</button>
-    </form>
+  <label>Numéro valide (WhatsApp)</label>
+  <input type="text" id="phone" placeholder="Ex: 509XXXXXXXX">
 
-    <p id="message"></p>
-  </section>
+  <label>Produit</label>
+  <select id="product">
+    <option value="Paypal (1500 GDS)">Paypal - 1500 GDS</option>
+    <option value="Carte Wise (1500 GDS)">Carte Wise - 1500 GDS</option>
+    <option value="Compte Meru (2400 GDS)">Compte Meru - 2400 GDS</option>
+    <option value="Netflix 1 mois (500 GDS)">Netflix 1 mois - 500 GDS</option>
+    <option value="Netflix 3 mois (1200 GDS)">Netflix 3 mois - 1200 GDS</option>
+  </select>
 
-  <footer>
-    <p>Site coded by True-Manno</p>
-    <div class="footer-links">
-      <a href="index.html">Accueil</a>
-      <a href="services.html">Services</a>
-      <a href="order.html">Commander</a>
-      <a href="contact.html">Contact</a>
-      <a href="https://wa.me/50943895284" target="_blank">WhatsApp</a>
-    </div>
-    <p>© 2026 E.S Company. Tous droits réservés.</p>
-  </footer>
+  <button type="button" id="sendOrder">Envoyer la commande</button>
+</div>
 
-  <script>
-    const API_URL = "https://e-s-service-backend.onrender.com";
+<div class="dialog" id="dialog">
+  <h3>Merci !</h3>
+  <p>Votre commande a été reçue. Nous allons vous contacter pour le paiement.</p>
+  <button type="button" onclick="closeDialog()">OK</button>
+</div>
 
-    const params = new URLSearchParams(window.location.search);
-    const serviceFromURL = params.get("service");
+<script>
+  function closeDialog() {
+    document.getElementById("dialog").style.display = "none";
+  }
 
-    if (serviceFromURL) {
-      document.getElementById("serviceInput").value = serviceFromURL;
+  async function sendOrder() {
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const product = document.getElementById("product").value;
+
+    if (!name || !phone) {
+      alert("Veuillez remplir tous les champs avec un numéro valide.");
+      return;
     }
 
-    function isValidPhone(phone) {
-      // Validation simple (Haïti +509 ou autre)
-      const regex = /^[0-9]{8,15}$/;
-      return regex.test(phone);
-    }
-
-    document.getElementById("orderForm").onsubmit = async (e) => {
-      e.preventDefault();
-
-      const phone = document.getElementById("phone").value.trim();
-      if (!isValidPhone(phone)) {
-        document.getElementById("message").innerText = "📌 Entre un numéro valide (ex: 509XXXXXXXX).";
-        return;
-      }
-
-      const formData = Object.fromEntries(new FormData(e.target));
-
-      const response = await fetch(`${API_URL}/order`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        document.getElementById("message").innerText =
-          "✅ Commande envoyée ! Nous allons te contacter bientôt pour le paiement.";
-        e.target.reset();
-      } else {
-        document.getElementById("message").innerText =
-          "❌ Une erreur est survenue. Réessaie.";
-      }
+    const order = {
+      customerName: name,
+      phone: phone,
+      productName: product,
+      price: product.includes("1500") ? 1500 : product.includes("2400") ? 2400 : product.includes("500") ? 500 : 1200
     };
-  </script>
+
+    await fetch("https://e-s-service-backend.onrender.com/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(order)
+    });
+
+    // Afficher la mini boîte dialogue
+    document.getElementById("dialog").style.display = "block";
+  }
+
+  document.getElementById("sendOrder").addEventListener("click", sendOrder);
+</script>
 
 </body>
 </html>
