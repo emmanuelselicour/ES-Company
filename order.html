@@ -1,0 +1,18 @@
+<form id="orderForm">
+  <input name="name" placeholder="Nom" required>
+  <input name="service" placeholder="Service choisi" required>
+  <button>Envoyer</button>
+</form>
+
+<script>
+document.getElementById("orderForm").onsubmit = async e => {
+  e.preventDefault();
+  const form = Object.fromEntries(new FormData(e.target));
+  await fetch("https://TON_API_RENDER_URL/order", {
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(form)
+  });
+  alert("Commande envoyée");
+};
+</script>
