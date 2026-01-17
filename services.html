@@ -1,0 +1,17 @@
+<section id="services"></section>
+
+<script>
+fetch("https://TON_API_RENDER_URL/services")
+.then(res => res.json())
+.then(data => {
+  const box = document.getElementById("services");
+  data.forEach(s => {
+    box.innerHTML += `
+      <div class="card">
+        <h3>${s.name}</h3>
+        <p>${s.price} GDS</p>
+      </div>
+    `;
+  });
+});
+</script>
