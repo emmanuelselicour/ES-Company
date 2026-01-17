@@ -170,6 +170,41 @@ body.panel {
 
 
 
+
+/* ----------------------------
+   Services cards - uniform buttons
+   ---------------------------- */
+.card img {
+  width: 100%;
+  height: auto;  /* garde la proportion normale */
+  display: block;
+  border-radius: 10px;
+}
+
+/* uniform button size */
+.card button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #1e40af;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.card button:hover {
+  background: #1e3a8a;
+}
+
+/* ensure cards same height */
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+
 footer {
   background: #0f172a;
   color: #ccc;
