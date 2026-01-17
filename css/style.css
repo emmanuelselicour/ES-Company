@@ -167,3 +167,30 @@ body.panel {
     font-size: 22px;
   }
 }
+
+
+
+footer {
+  background: #0f172a;
+  color: #ccc;
+  text-align: center;
+  padding: 25px 20px;
+  font-size: 14px;
+}
+
+.footer-links {
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
